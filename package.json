@@ -1,0 +1,11 @@
+{
+  "name": "sunergyx-solar-shop",
+  "version": "2.0.0",
+  "description": "SunergyX Solar Shop - Paystack Live + WhatsApp Webhook",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  }
+}
