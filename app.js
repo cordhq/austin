@@ -77,7 +77,7 @@
     }));
   }
   function loadCategoryTiles(){
-    const saved = safeJSON(CONFIG.CATEGORY_TILES_KEY, null);
+    const saved = Array.isArray(window.SUNERGYX_TILES) ? window.SUNERGYX_TILES : null;
     const defaults = getDefaultCategoryTiles();
     if(saved && Array.isArray(saved) && saved.length){
       const map = new Map(saved.map(t=>[t.key, t]));
