@@ -6,6 +6,10 @@
       "use": "@vercel/static"
     },
     {
+      "src": "admin.html",
+      "use": "@vercel/static"
+    },
+    {
       "src": "api/whatsapp.js",
       "use": "@vercel/node"
     }
