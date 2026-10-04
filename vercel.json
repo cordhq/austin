@@ -12,12 +12,20 @@
     {
       "src": "api/whatsapp.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "api/newsletter.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/api/whatsapp",
       "dest": "/api/whatsapp.js"
+    },
+    {
+      "src": "/api/newsletter",
+      "dest": "/api/newsletter.js"
     },
     {
       "src": "/(.*)",

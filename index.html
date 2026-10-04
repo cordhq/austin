@@ -141,6 +141,7 @@
       <input type="text" id="custName" placeholder="Full Name *"><input type="email" id="custEmail" placeholder="Email *"><input type="tel" id="custPhone" placeholder="Phone (080...)"><select id="custShipping" aria-label="Delivery location"></select><div id="shippingNote" style="font-size:11px;color:#6B7280;margin:-4px 0 8px;display:none"></div>
       <button class="pay-btn" onclick="SunergyX.initiatePaystackCheckout()">🔒 Pay via Paystack (NGN)</button>
       <p style="font-size:10px;color:#9CA3AF;text-align:center;margin-top:6px">Paystack live/test auto-detected. WhatsApp order sent after payment.</p>
+      <p style="font-size:10px;color:#9CA3AF;text-align:center;margin-top:4px">By paying you agree to our <a href="#terms" data-policy="terms" style="color:#10A75F;text-decoration:underline">Terms of Service</a>, <a href="#refund-policy" data-policy="refund-policy" style="color:#10A75F;text-decoration:underline">Refund Policy</a> and <a href="#shipping-policy" data-policy="shipping-policy" style="color:#10A75F;text-decoration:underline">Shipping Policy</a>.</p>
     </div>
   </div>
 </div>
@@ -174,7 +175,132 @@ document.addEventListener('DOMContentLoaded',function(){
 </script>
 
 <footer class="footer" id="contact">
-  <div class="footer-inner"><div class="footer-left"><div style="width:36px;height:36px;background:#10A75F;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;border-radius:4px">SX</div><div class="footer-copy">© 2026 SunergyX — Solar Power Solution</div></div><div class="footer-right"><span>✆ +234 708 444 1471</span><span>@ info@sunergyx.com.ng</span></div></div>
+  <div class="footer-top">
+    <div class="footer-news">
+      <h3>Get Solar Tips &amp; Deals</h3>
+      <p>Subscribe to our newsletter for new products, combo deals and energy-saving advice.</p>
+      <form id="newsForm" class="news-form" novalidate>
+        <input type="email" name="email" placeholder="Your email address" required autocomplete="email" aria-label="Email address">
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button type="submit">Subscribe</button>
+      </form>
+      <div id="newsMsg" class="news-msg" role="status" aria-live="polite"></div>
+      <small>By subscribing you agree to our <a href="#terms" data-policy="terms">Terms of Service</a>. Unsubscribe any time by emailing us.</small>
+    </div>
+    <nav class="footer-links" aria-label="Footer">
+      <h4>Quick Links</h4>
+      <a href="#shop">Products</a>
+      <a href="#calculator">Estimation Tool</a>
+      <a href="#faq">FAQ</a>
+      <a href="#terms" data-policy="terms">Terms of Service</a>
+      <a href="#refund-policy" data-policy="refund-policy">Refund Policy</a>
+      <a href="#shipping-policy" data-policy="shipping-policy">Shipping Policy</a>
+      <a href="https://wa.me/2347084441471" target="_blank" rel="noopener">WhatsApp Us</a>
+    </nav>
+  </div>
+  <div class="footer-inner"><div class="footer-left"><div style="width:36px;height:36px;background:#10A75F;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;border-radius:4px">SX</div><div class="footer-copy">© 2026 SunergyX — Solar Power Solution</div></div><div class="footer-right"><a href="#terms" data-policy="terms">Terms</a><a href="#refund-policy" data-policy="refund-policy">Refunds</a><a href="#shipping-policy" data-policy="shipping-policy">Shipping</a><span>✆ +234 708 444 1471</span><span>@ info@sunergyx.com.ng</span></div></div>
 </footer>
+<div id="termsModal" class="terms-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="termsTitle">
+  <div class="terms-box">
+    <div class="terms-head"><div><h3 id="termsTitle">Terms of Service</h3><span>Last updated: 4 October 2026</span></div><button type="button" class="terms-close" aria-label="Close terms">&#10005;</button></div>
+    <div class="terms-body">
+      <section><h4>About these Terms</h4><p>These Terms of Service (&ldquo;Terms&rdquo;) apply to your use of the SunergyX website and to any order you place with us. SunergyX (&ldquo;we&rdquo;, &ldquo;us&rdquo;) supplies solar power equipment from 18 Sarah Faboyede Street, Bucknor Ejigbo, Lagos, Nigeria. By browsing the site, subscribing to our newsletter or placing an order, you agree to these Terms. If you do not agree, please do not use the site.</p></section>
+      <section><h4>Using the website</h4><p>You may use this site only for lawful purposes. You must not try to gain unauthorised access to the site or its systems, copy, scrape or resell our content or product listings without written permission, give false information or use someone else's payment details, or interfere with how the site works. We may restrict access if we believe these Terms are being broken.</p></section>
+      <section><h4>Products and pricing</h4><p>Product images, descriptions and specifications are for guidance and may differ slightly from the item supplied, for example when a manufacturer updates a model. All prices are in Nigerian Naira (&#8358;). Prices, promotions and availability can change without notice, and promotional prices apply while stock lasts. If we find a pricing or description error after you order, we will contact you before processing the order, and you can accept the corrected details or cancel for a full refund.</p></section>
+      <section><h4>Placing an order</h4><p>To order, add items to your cart, enter your name, email, phone number and delivery location, and pay through Paystack. Your order details are then sent to us on WhatsApp. An order is accepted once we have received your payment and confirmed availability with you. For large orders we recommend confirming availability with us on WhatsApp before you pay. If we cannot supply an item, we will tell you and refund what you paid for it.</p></section>
+      <section><h4>Payment</h4><p>Payments are processed securely by Paystack in Naira. We do not see or store your card or bank details. If a payment fails or is declined, no order is created. Any charges made by your bank or by Paystack are your responsibility. Ownership of the goods passes to you only once full payment has been received.</p></section>
+      <section><h4>Delivery and pickup</h4><p>Delivery fees depend on the location you choose at checkout and are added to your total. For heavy or bulky items such as batteries and large inverters the fee may change, and for deliveries to other states we confirm the final fee with you on WhatsApp before dispatch. You can also collect your order free of charge from our store. Delivery times are estimates and depend on your location and stock. Our <a href="#shipping-policy" data-policy="shipping-policy">Shipping Policy</a> has the full details.</p><p>Please check your goods on arrival and tell us straight away about any damage or missing items. Risk in the goods passes to you on delivery. Please give accurate delivery details: we are not responsible for delays or failed deliveries caused by an incorrect address or an unreachable phone number, and a repeat delivery attempt may be charged.</p></section>
+      <section><h4>Warranty</h4><p>Most products carry a warranty from the manufacturer or supplier. Warranty length and cover differ by product and brand, so please ask us to confirm the warranty for your exact item before you order. Warranties do not normally cover misuse, incorrect installation or wiring, overloading, power surges, water or physical damage, unauthorised repairs or normal wear. To make a claim, contact us with your order reference and a description of the fault.</p></section>
+      <section><h4>Faulty, damaged or incorrect items</h4><p>If an item arrives damaged, faulty or different from what you ordered, contact us as soon as possible after delivery with your order reference and photos where you can. We will review each case fairly and, where appropriate, repair, replace or refund the item. Approved refunds are made to the original payment method where possible. This does not affect any rights you have under applicable Nigerian consumer law. Our <a href="#refund-policy" data-policy="refund-policy">Refund Policy</a> explains how returns, refunds and cancellations work.</p></section>
+      <section><h4>Installation, safety and advice</h4><p>Our Estimation Tool and any advice we give are for guidance only, because real needs depend on your appliances, usage and site. Solar, inverter and battery systems involve electrical risk. Installation and wiring should be done by a qualified technician following the manufacturer's instructions. We are not liable for loss or damage caused by incorrect installation or by using equipment beyond its rated capacity.</p></section>
+      <section><h4>Newsletter and communications</h4><p>If you subscribe to our newsletter, we will use your email address to send news about products, offers and solar tips. You can unsubscribe at any time by emailing info@sunergyx.com.ng or messaging us on WhatsApp. We use your phone number and WhatsApp to confirm and arrange your order.</p></section>
+      <section><h4>Your information</h4><p>We collect the details you give us, such as your name, email, phone number and delivery location, to process orders, arrange delivery, provide support and, if you subscribe, send our newsletter. We share information only with services that need it to fulfil your order, such as Paystack and delivery providers, or where the law requires it. We handle personal data in line with applicable Nigerian data protection law. Your checkout details may also be saved in your own browser to speed up future orders.</p></section>
+      <section><h4>Intellectual property</h4><p>The SunergyX name, logo, design and site content belong to us or our licensors, and product names and brands belong to their owners. You may not copy or reuse them without permission, except for your own personal, non-commercial use.</p></section>
+      <section><h4>Third-party services</h4><p>The site relies on third parties such as Paystack for payments and WhatsApp for messaging. We are not responsible for their availability or for their own terms.</p></section>
+      <section><h4>Limitation of liability</h4><p>To the fullest extent permitted by law, we are not liable for indirect or consequential loss, such as lost profits or loss of use, arising from your use of the site or our products, and our total liability for any claim relating to an order will not exceed the amount you paid for that order. Nothing in these Terms excludes liability that cannot be excluded by law, including for fraud or for death or personal injury caused by negligence, or limits your rights under applicable consumer protection law.</p></section>
+      <section><h4>Governing law and complaints</h4><p>These Terms are governed by the laws of the Federal Republic of Nigeria. If you have a complaint, please contact us first so we can try to resolve it informally. Any dispute we cannot resolve will be subject to the courts of competent jurisdiction in Nigeria.</p></section>
+      <section><h4>Changes to these Terms</h4><p>We may update these Terms from time to time. The version on this page, with the date shown above, applies to orders placed after it is published.</p></section>
+      <section><h4>Contact us</h4><p>SunergyX, 18 Sarah Faboyede Street, Bucknor Ejigbo, Lagos<br>Phone / WhatsApp: +234 708 444 1471<br>Email: info@sunergyx.com.ng</p></section>
+    </div>
+    <div class="terms-foot"><button type="button" class="terms-ok">I Understand</button></div>
+  </div>
+</div>
+<div id="refundModal" class="terms-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="refundTitle">
+  <div class="terms-box">
+    <div class="terms-head"><div><h3 id="refundTitle">Refund &amp; Return Policy</h3><span>Last updated: 4 October 2026</span></div><button type="button" class="terms-close" aria-label="Close">&#10005;</button></div>
+    <div class="terms-body">
+      <section><h4>Overview</h4><p>We want you to be happy with what you buy. This policy explains how returns, refunds and cancellations work at SunergyX. Please read it together with our <a href="#terms" data-policy="terms">Terms of Service</a> and <a href="#shipping-policy" data-policy="shipping-policy">Shipping Policy</a>.</p></section>
+      <section><h4>Check your order when it arrives</h4><p>Please open and inspect your items in front of the delivery person before you sign the delivery note, and write down any visible damage or missing items on it. If something is wrong, message us on WhatsApp the same day if you can.</p></section>
+      <section><h4>When you can return an item</h4><p>If you want to return an item, contact us within 48 hours of delivery. <!-- CONFIRM: 48-hour return window --> To be eligible, the item must be unused and in the same condition you received it, in its original packaging with all accessories, manuals and cables, and you must be able to show your order reference or Paystack payment receipt.</p></section>
+      <section><h4>Items we cannot take back</h4><p>We cannot accept a return or give a refund or replacement for:</p><ul><li>products, boxes, packaging or tags that show physical damage after delivery;</li><li>items returned without their original packaging or any accessories, manuals or cables that came with them;</li><li>items with a missing, damaged, altered or unreadable serial number;</li><li>items that have been installed, connected or powered up, unless there is a fault that we confirm on inspection.</li></ul></section>
+      <section><h4>Faulty, damaged or wrong items</h4><p>If an item is faulty when it arrives, damaged in transit or not what you ordered, tell us as soon as possible. After inspection we will, where appropriate, replace it, repair it or refund it, and we will cover the cost of getting it back to us. <!-- CONFIRM: we pay return delivery for our errors/faults --> Problems that appear after you have been using an item are handled under the product warranty described in our Terms of Service.</p></section>
+      <section><h4>How to request a return</h4><p>Message us on WhatsApp at +234 708 444 1471 or email info@sunergyx.com.ng with your name, order reference, the item, the reason for the return, and photos or a short video where possible. We will confirm whether the return is approved and tell you where to send or hand over the item. Please do not send anything back before we have approved it.</p></section>
+      <section><h4>Return delivery costs</h4><p>If you are returning an item because you changed your mind, you pay the cost of getting it back to us, and the original delivery fee is not refunded. <!-- CONFIRM: customer pays return delivery for change-of-mind returns --> If the return is because of our error or a fault, we cover the cost.</p></section>
+      <section><h4>Inspection and refunds</h4><p>When we receive the item we inspect it. If the return is approved, we refund the price of the item to your original payment method through Paystack. We will tell you when to expect the money, and bank processing times can vary. Delivery fees are refunded only where the return is due to our error.</p></section>
+      <section><h4>Cancelling an order</h4><p>You can cancel an order before it is dispatched by messaging us on WhatsApp or emailing us with your order reference. Once an order has been dispatched, please follow the return process above instead. If we cannot supply something you have paid for, we will refund you in full.</p></section>
+      <section><h4>Contact us</h4><p>SunergyX, 18 Sarah Faboyede Street, Bucknor Ejigbo, Lagos<br>Phone / WhatsApp: +234 708 444 1471<br>Email: info@sunergyx.com.ng</p></section>
+    </div>
+    <div class="terms-foot"><button type="button" class="terms-ok">I Understand</button></div>
+  </div>
+</div>
+<div id="shippingModal" class="terms-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="shippingTitle">
+  <div class="terms-box">
+    <div class="terms-head"><div><h3 id="shippingTitle">Shipping Policy</h3><span>Last updated: 4 October 2026</span></div><button type="button" class="terms-close" aria-label="Close">&#10005;</button></div>
+    <div class="terms-body">
+      <section><h4>Order confirmation</h4><p>After you pay through Paystack, your order details reach us on WhatsApp, and you should receive a payment receipt from Paystack at the email address you entered. We then confirm availability and delivery details with you on WhatsApp. If you do not hear from us soon after paying, please message us.</p></section>
+      <section><h4>Processing time</h4><p>Once your order is confirmed we prepare and dispatch it as soon as possible, usually within 1 to 3 working days. <!-- CONFIRM: processing time --> Large, heavy or special-order items can take longer, and we will tell you if that applies to your order.</p></section>
+      <section><h4>Delivery areas and fees</h4><p>Delivery fees depend on the location you choose at checkout.</p><div id="shipFees"></div><p>These are the fees currently shown at checkout. For heavy or bulky items such as batteries and large inverters the fee may change, and for deliveries to other states we confirm the final fee with you on WhatsApp before dispatch.</p></section>
+      <section><h4>Delivery times</h4><p>How long delivery takes depends on your location, the item and stock availability. We confirm an estimated delivery date with you on WhatsApp. Delivery times are estimates and not guaranteed.</p></section>
+      <section><h4>Store pickup</h4><p>Pickup is free. You can collect your order from our store at 18 Sarah Faboyede Street, Bucknor Ejigbo, Lagos. Choose Pickup at Store at checkout, and we will tell you on WhatsApp when your order is ready. Please bring your order reference and a valid ID.</p></section>
+      <section><h4>Receiving your order</h4><p>Someone must be at the delivery address to receive and sign for the goods, so please plan accordingly and keep your phone on so the delivery person can reach you. Check the items before you sign and note any damage or missing items on the delivery note. See our <a href="#refund-policy" data-policy="refund-policy">Refund Policy</a> for what to do if something is wrong.</p></section>
+      <section><h4>Missed or failed deliveries</h4><p>If we cannot reach you or no one is available to receive the order, we will contact you to arrange another delivery. A repeat delivery attempt may be charged, and we are not responsible for delays caused by an incorrect address or an unreachable phone number.</p></section>
+      <section><h4>Delays</h4><p>Things outside our control, such as road conditions, weather, fuel supply, public holidays or supplier stock, can delay deliveries. If your order is affected, we will keep you updated on WhatsApp.</p></section>
+      <section><h4>Extra charges</h4><p>The prices and delivery fee you see at checkout are what you pay. If anything else applies to your order, we will tell you before it is dispatched.</p></section>
+      <section><h4>Questions about delivery</h4><p>SunergyX, 18 Sarah Faboyede Street, Bucknor Ejigbo, Lagos<br>Phone / WhatsApp: +234 708 444 1471<br>Email: info@sunergyx.com.ng</p></section>
+    </div>
+    <div class="terms-foot"><button type="button" class="terms-ok">I Understand</button></div>
+  </div>
+</div>
+<script>
+(function(){
+  var MAP={'terms':'termsModal','refund-policy':'refundModal','shipping-policy':'shippingModal'}, cur=null, last=null;
+  function el(k){ return document.getElementById(MAP[k]); }
+  function show(k){
+    var ov=el(k); if(!ov) return;
+    if(cur&&cur!==k) el(cur).classList.add('hidden'); else if(!cur) last=document.activeElement;
+    ov.classList.remove('hidden'); document.body.style.overflow='hidden';
+    ov.querySelector('.terms-body').scrollTop=0; ov.querySelector('.terms-close').focus(); cur=k;
+    try{ if(location.hash!=='#'+k) history.replaceState(null,'','#'+k); }catch(e){}
+  }
+  function hide(){
+    if(!cur) return; var k=cur; el(k).classList.add('hidden'); document.body.style.overflow=''; cur=null;
+    try{ if(location.hash==='#'+k) history.replaceState(null,'',location.pathname+location.search); }catch(e){}
+    if(last&&last.focus) last.focus(); last=null;
+  }
+  document.addEventListener('click',function(e){ var a=e.target.closest&&e.target.closest('[data-policy]'); if(a){ e.preventDefault(); show(a.getAttribute('data-policy')); } });
+  document.querySelectorAll('.terms-overlay').forEach(function(ov){ ov.addEventListener('click',function(e){ if(e.target===ov||e.target.closest('.terms-close')||e.target.closest('.terms-ok')) hide(); }); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&cur){ e.stopImmediatePropagation(); hide(); } },true);
+  var hh=location.hash.slice(1); if(MAP[hh]) show(hh);
+  document.addEventListener('DOMContentLoaded',function(){
+    var box=document.getElementById('shipFees'), S=window.SUNERGYX_SHIPPING; if(!box||!S||!S.length) return;
+    box.innerHTML='<ul class="faq-fees">'+S.map(function(r){ return '<li><span>'+r.label.split(' \u2014 ')[0]+'</span><b>'+(r.fee?'\u20A6'+Number(r.fee).toLocaleString('en-NG'):'Free')+'</b></li>'; }).join('')+'</ul>';
+  });
+
+  var f=document.getElementById('newsForm'), msg=document.getElementById('newsMsg');
+  if(!f) return;
+  function say(t,ok){ msg.textContent=t; msg.className='news-msg '+(ok?'ok':'err'); }
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var email=f.email.value.trim(), btn=f.querySelector('button');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){ say('Please enter a valid email address.',false); f.email.focus(); return; }
+    btn.disabled=true; btn.textContent='Subscribing\u2026'; say('',true);
+    fetch('/api/newsletter',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,website:f.website.value})})
+      .then(function(r){ return r.json().catch(function(){return {};}).then(function(d){ return {ok:r.ok&&d.ok,err:d.error}; }); })
+      .then(function(res){ if(res.ok){ say('Thank you! You are now subscribed.',true); f.reset(); } else { say(res.err||'Sorry, we could not subscribe you right now. Please try again.',false); } })
+      .catch(function(){ say('Network problem. Please check your connection and try again.',false); })
+      .then(function(){ btn.disabled=false; btn.textContent='Subscribe'; });
+  });
+})();
+</script>
 </body>
 </html>

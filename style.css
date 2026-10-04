@@ -245,3 +245,47 @@ html{scroll-behavior:smooth}
 .fslide .pcard{width:100%}
 @media(max-width:1024px){.fslide{flex-basis:calc((100% - 32px)/3)}}
 @media(max-width:700px){.fslide{flex-basis:calc((100% - 16px)/1.6)}.featured{padding-top:48px}}
+
+.footer-top{max-width:1240px; margin:0 auto 28px; padding:0 24px 28px; display:grid; grid-template-columns:1.6fr 1fr; gap:40px; border-bottom:1px solid rgba(255,255,255,.12)}
+.footer-news h3{font-size:18px; font-weight:800; margin:0 0 6px}
+.footer-news p{font-size:13px; color:rgba(255,255,255,.65); margin:0 0 14px; line-height:1.55}
+.footer-news small{display:block; font-size:11px; color:rgba(255,255,255,.5); margin-top:10px; line-height:1.5}
+.footer-news small a,.footer-right a{color:#fff; text-decoration:underline; text-underline-offset:2px}
+.footer-right a:hover,.footer-news small a:hover,.footer-links a:hover{color:#6EE0A6}
+.news-form{display:flex; gap:8px; max-width:460px}
+.news-form input[type=email]{flex:1; min-width:0; height:44px; padding:0 14px; border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.08); color:#fff; font-size:13px; border-radius:4px}
+.news-form input[type=email]::placeholder{color:rgba(255,255,255,.45)}
+.news-form input[type=email]:focus{outline:2px solid #10A75F; outline-offset:1px; background:rgba(255,255,255,.12)}
+.news-form button{height:44px; padding:0 22px; border:0; border-radius:4px; background:#10A75F; color:#fff; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; cursor:pointer; transition:background .2s}
+.news-form button:hover{background:#0E9A56}
+.news-form button:disabled{opacity:.6; cursor:wait}
+.news-form .hp{position:absolute; left:-9999px; width:1px; height:1px; opacity:0}
+.news-msg{font-size:12px; margin-top:10px; min-height:0}
+.news-msg.ok{color:#6EE0A6}
+.news-msg.err{color:#FCA5A5}
+.footer-links{display:flex; flex-direction:column; gap:9px}
+.footer-links h4{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.5); margin:0 0 4px}
+.footer-links a{font-size:13px; color:rgba(255,255,255,.85); width:fit-content}
+.terms-overlay{position:fixed; inset:0; z-index:10000; background:rgba(17,24,39,.6); backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center; padding:20px}
+.terms-overlay.hidden{display:none}
+.terms-box{background:#fff; color:#1F2937; width:100%; max-width:760px; max-height:88vh; border-radius:12px; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.terms-head{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; padding:20px 24px 14px; border-bottom:1px solid #E5E7EB}
+.terms-head h3{font-size:20px; font-weight:800; margin:0}
+.terms-head span{font-size:12px; color:#6B7280}
+.terms-close{width:34px; height:34px; border:1px solid #E5E7EB; background:#fff; border-radius:50%; cursor:pointer; font-size:14px; color:#4B5563; flex-shrink:0}
+.terms-close:hover{background:#F3F4F6}
+.terms-body{overflow-y:auto; padding:6px 24px 18px; counter-reset:t; font-size:14px; line-height:1.7; color:#4B5563}
+.terms-body section{counter-increment:t}
+.terms-body h4{font-size:14px; font-weight:800; color:#111827; margin:20px 0 6px}
+.terms-body h4::before{content:counter(t) ". "; color:#10A75F}
+.terms-body p{margin:0 0 8px}
+.terms-foot{padding:14px 24px; border-top:1px solid #E5E7EB; text-align:right}
+.terms-ok{background:#10A75F; color:#fff; border:0; padding:11px 24px; border-radius:4px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; cursor:pointer}
+.terms-ok:hover{background:#0E9A56}
+@media(max-width:760px){.footer-top{grid-template-columns:1fr; gap:28px}.news-form{flex-direction:column}.news-form button{width:100%}.terms-overlay{padding:0; align-items:flex-end}.terms-box{max-height:92vh; border-radius:14px 14px 0 0}}
+
+.footer-right{flex-wrap:wrap; gap:10px 22px}
+.terms-body ul{margin:0 0 8px; padding-left:20px}
+.terms-body li{margin-bottom:4px}
+.terms-body a{color:#10A75F; font-weight:700; text-decoration:underline}
+.terms-body .faq-fees{padding:0; margin:8px 0 12px}
