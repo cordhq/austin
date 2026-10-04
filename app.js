@@ -235,9 +235,43 @@
     const inv=document.querySelector('#calcInverterRating'); if(inv) inv.textContent=inverter; const bat=document.querySelector('#calcBatteryCapacity'); if(bat) bat.textContent=battery; const pan=document.querySelector('#calcPanelsCount'); if(pan) pan.textContent=panels;
   }
 
+  /* ---------- Featured products slider (random picks, auto-slides) ---------- */
+  const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+  function pickFeatured(n=12){
+    const by={}; products.filter(p=>p.image && p.price>0 && p.stock!==0).forEach(p=>(by[p.category]=by[p.category]||[]).push(p));
+    const cats=shuffle(Object.keys(by)); cats.forEach(k=>by[k]=shuffle(by[k]));
+    const out=[]; while(out.length<n && cats.some(k=>by[k].length)){ for(const k of cats){ if(by[k].length && out.length<n) out.push(by[k].pop()); } }
+    return out;
+  }
+  function renderFeatured(){
+    const t=document.querySelector('#featuredTrack'); if(!t) return;
+    t.innerHTML=pickFeatured().map(p=>`<div class="fslide"><div class="pcard">${cardHTML(p)}</div></div>`).join('');
+    t.scrollLeft=0;
+  }
+  function featuredStep(dir){
+    const t=document.querySelector('#featuredTrack'), sl=t&&t.querySelector('.fslide'); if(!sl) return;
+    const step=sl.getBoundingClientRect().width+(parseFloat(getComputedStyle(t).columnGap)||16), max=t.scrollWidth-t.clientWidth;
+    if(dir>0 && t.scrollLeft>=max-4){ t.style.opacity=0; setTimeout(()=>{ renderFeatured(); t.style.opacity=1; },250); return; }
+    if(dir<0 && t.scrollLeft<=4){ t.scrollTo({left:max,behavior:'smooth'}); return; }
+    t.scrollBy({left:dir*step,behavior:'smooth'});
+  }
+  function initFeatured(){
+    const box=document.querySelector('#featured'), t=document.querySelector('#featuredTrack'); if(!box||!t) return;
+    renderFeatured();
+    let paused=false, timer=null;
+    const play=()=>{ clearInterval(timer); if(matchMedia('(prefers-reduced-motion: reduce)').matches) return; timer=setInterval(()=>{ if(!paused && !document.hidden) featuredStep(1); },3500); };
+    box.querySelector('.fnav.prev')?.addEventListener('click',()=>featuredStep(-1));
+    box.querySelector('.fnav.next')?.addEventListener('click',()=>featuredStep(1));
+    box.querySelector('#featuredShuffle')?.addEventListener('click',()=>{ t.style.opacity=0; setTimeout(()=>{ renderFeatured(); t.style.opacity=1; },250); });
+    ['mouseenter','focusin','touchstart'].forEach(e=>box.addEventListener(e,()=>{ paused=true; }, {passive:true}));
+    ['mouseleave','focusout'].forEach(e=>box.addEventListener(e,()=>{ paused=false; }));
+    box.addEventListener('touchend',()=>{ setTimeout(()=>{ paused=false; },4000); }, {passive:true});
+    play();
+  }
+
   function initApp(){
     products=window.THQ_PRODUCTS||[]; if(!products.length){ document.querySelector('#productGrid')&&( document.querySelector('#productGrid').innerHTML='<p class="landing-note">Products could not be loaded.</p>'); return; }
-    buildSearchIndex(); loadCart(); loadSettings(); renderCart(); fillFilters(); renderLanding(); calculateSolarLoad(); renderShippingOptions(); loadCustomer(); renderCart();
+    buildSearchIndex(); loadCart(); loadSettings(); renderCart(); fillFilters(); renderLanding(); initFeatured(); calculateSolarLoad(); renderShippingOptions(); loadCustomer(); renderCart();
     document.querySelector('#searchInput')?.addEventListener('input', debounce(()=>filterProducts(),250));
     document.querySelector('#categoryFilter')?.addEventListener('change', ()=>{ refreshDropdowns(true); filterProducts(); });
     document.querySelector('#typeFilter')?.addEventListener('change', ()=>{ refreshDropdowns(false); filterProducts(); });

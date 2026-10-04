@@ -229,3 +229,19 @@ html{scroll-behavior:smooth}
 .faq-cta a{background:#10A75F; color:#fff; padding:12px 24px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; border-radius:4px}
 .faq-cta a:hover{background:#0E9A56}
 @media(max-width:640px){.faq{padding:56px 0}.faq-item summary{font-size:14px}}
+
+.featured{padding:64px 0 24px}
+.featured-head{display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:22px}
+.featured-head h2{font-size:28px; font-weight:800; letter-spacing:-0.02em; margin-top:4px}
+.featured-head p{font-size:13px; color:#6B7280; margin-top:6px}
+.featured-ctrl{display:flex; gap:8px; align-items:center}
+.fnav,.fshuffle{border:1px solid #E5E7EB; background:#fff; cursor:pointer; font-weight:800; color:#10A75F; transition:background .2s,color .2s,border-color .2s}
+.fnav{width:38px; height:38px; border-radius:50%; font-size:22px; line-height:1}
+.fshuffle{height:38px; padding:0 16px; border-radius:20px; font-size:11px; text-transform:uppercase; letter-spacing:.08em}
+.fnav:hover,.fshuffle:hover{background:#10A75F; color:#fff; border-color:#10A75F}
+.featured-track{display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; transition:opacity .25s; padding:4px 2px 12px}
+.featured-track::-webkit-scrollbar{display:none}
+.fslide{flex:0 0 calc((100% - 48px)/4); scroll-snap-align:start; min-width:0; display:flex}
+.fslide .pcard{width:100%}
+@media(max-width:1024px){.fslide{flex-basis:calc((100% - 32px)/3)}}
+@media(max-width:700px){.fslide{flex-basis:calc((100% - 16px)/1.6)}.featured{padding-top:48px}}
