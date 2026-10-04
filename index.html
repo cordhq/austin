@@ -22,14 +22,6 @@
 .pcard{will-change:transform}
 .skeleton{background:linear-gradient(90deg,#F0FAF4 25%,#E8F7EE 50%,#F0FAF4 75%);background-size:200% 100%;animation:shimmer 1.2s infinite}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
-.tile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:16px}
-.tile{position:relative;overflow:hidden;border:1px solid #E5E7EB;background:#fff;cursor:pointer;text-align:left;padding:0;height:180px;border-radius:10px}
-.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.tile-ov{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.7) 0%,rgba(0,0,0,.1) 60%)}
-.tile-txt{position:absolute;bottom:0;left:0;right:0;padding:14px;color:#fff}
-.tile-txt h3{font-size:16px;font-weight:800;margin:0 0 4px}
-.tile-txt p{font-size:11px;margin:0;opacity:.9}
-.tile-txt span{display:inline-block;margin-top:8px;background:#fff;color:#10A75F;padding:4px 10px;font-size:10px;font-weight:800;border-radius:20px}
 </style>
 </head>
 <body id="top">
@@ -52,10 +44,13 @@
   <div class="navbar-inner">
     <div class="nav-links">
       <a href="#top">Home</a>
+      <a href="#" onclick="event.preventDefault();SunergyX.pickCategory('Combos')">Combo Deals</a>
       <a href="#" onclick="event.preventDefault();SunergyX.pickCategory('Panels')">Solar Panels</a>
       <a href="#" onclick="event.preventDefault();SunergyX.pickCategory('Inverters')">Inverters</a>
       <a href="#" onclick="event.preventDefault();SunergyX.pickCategory('Batteries')">Batteries</a>
+      <a href="#" onclick="event.preventDefault();SunergyX.pickCategory('Appliances')">Energy Saving</a>
       <a href="#calculator">Estimation Tool</a>
+      <a href="#faq">FAQ</a>
     </div>
     <div class="nav-right">
       <button class="btn-cart" id="openCartBtn" onclick="SunergyX.toggleCart(true)">Cart <span id="cartCountBadge">0</span></button>
@@ -106,10 +101,11 @@
 
 <section id="shop" class="shop">
   <div class="container">
-    <div class="shop-head"><div><span class="eyebrow green">Inventory</span><h2>Solar Installation Products</h2><p>All prices in ₦. Warranties included.</p></div>
+    <div class="dir-head"><span class="eyebrow green">Products Directory</span><h2>Browse By Category</h2><p>Select a product category to explore specific subcategories and components.</p></div>
+    <div class="shop-head">
       <div class="shop-filters">
         <input type="text" id="searchInput" placeholder="Search panels, inverters..." autocomplete="off">
-        <select id="categoryFilter"><option value="ALL">① Select Category</option><option value="Panels">Solar Panels</option><option value="Inverters">Inverters</option><option value="Batteries">Batteries</option><option value="Controllers">Charge Controllers</option><option value="Breakers">Breakers</option><option value="Cables">Cables</option><option value="Accessories">Accessories</option></select>
+        <select id="categoryFilter"><option value="ALL">① Select Category</option><option value="Combos">Combo Deals</option><option value="Panels">Solar Panels</option><option value="Inverters">Inverters</option><option value="Batteries">Batteries</option><option value="Controllers">Charge Controllers</option><option value="Breakers">Breakers &amp; Protection</option><option value="Appliances">Energy Saving Appliances</option><option value="Accessories">Accessories</option></select>
         <select id="typeFilter" disabled><option value="ALL">② All Types</option></select>
         <select id="brandFilter" disabled><option value="ALL">③ All Brands</option></select>
         <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="promoOnly"> 🏷 Promo</label>
@@ -135,6 +131,33 @@
   </div>
 </div>
 <div id="toastContainer"></div>
+
+<section id="faq" class="faq">
+  <div class="container">
+    <div class="sec-head"><span class="eyebrow green">FAQ</span><h2>Frequently Asked Questions</h2><p>Quick answers about ordering, delivery and choosing the right solar setup for your home or business.</p></div>
+    <div class="faq-list">
+    <details class="faq-item"><summary>What does SunergyX sell?</summary><div class="faq-a"><p>We supply complete solar power equipment: combo deals, solar panels, inverters, batteries, charge controllers, breakers and protection, energy saving appliances (including solar street lights), and accessories such as solar generators, security cameras and power banks. Use the Products Directory above to browse each category.</p></div></details>
+    <details class="faq-item"><summary>How do I know what size inverter and battery I need?</summary><div class="faq-a"><p>Use our free <a href="#calculator">Estimation Tool</a>. Enter the appliances you run at home (lights, fans, TV, fridge, AC, pump) and it recommends an inverter size, battery capacity and number of panels. For a bigger home, a business, or a setup the tool does not cover, message us and we will size it with you.</p></div></details>
+    <details class="faq-item"><summary>How do I pay for my order?</summary><div class="faq-a"><p>Add items to your cart, enter your name, email and phone number, choose your delivery location and pay securely with Paystack in Naira. Your order details are sent to us on WhatsApp once payment goes through.</p></div></details>
+    <details class="faq-item"><summary>What happens after I place an order?</summary><div class="faq-a"><p>We confirm your order with you on WhatsApp, arrange delivery or pickup, and keep you updated until it reaches you. If anything about your order needs adjusting, we will tell you before dispatch.</p></div></details>
+    <details class="faq-item"><summary>How much is delivery?</summary><div class="faq-a"><p><span id="faqDelivery">Delivery fees depend on your location and are shown in the cart when you choose your delivery area.</span></p></div></details>
+    <details class="faq-item"><summary>Can I pick up my order from your store?</summary><div class="faq-a"><p>Yes, pickup is free. Collect from our store at 18 Sarah Faboyede Street, Bucknor Ejigbo, Lagos. Select Pickup at Store in the cart at checkout.</p></div></details>
+    <details class="faq-item"><summary>Do the products come with a warranty?</summary><div class="faq-a"><p>Yes. Warranty terms differ by product and brand, so the cover for batteries, inverters and panels is not the same. Ask us on WhatsApp before you order and we will confirm the warranty for the exact item you want.</p></div></details>
+    <details class="faq-item"><summary>I cannot find the product I need. What should I do?</summary><div class="faq-a"><p>Our Combo Deals and Energy Saving Appliances ranges are still being expanded, and we can source items that are not listed yet. Tell us what you need on WhatsApp and we will get back to you with options and prices.</p></div></details>
+    </div>
+    <div class="faq-cta"><div><strong>Still have a question?</strong><span>Message our team on WhatsApp and we will help you.</span></div><a href="https://wa.me/2347084441471?text=Hello%20SunergyX%2C%20I%20have%20a%20question%20about%20solar%20equipment." target="_blank" rel="noopener">Chat With Us</a></div>
+  </div>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What does SunergyX sell?", "acceptedAnswer": {"@type": "Answer", "text": "We supply complete solar power equipment: combo deals, solar panels, inverters, batteries, charge controllers, breakers and protection, energy saving appliances (including solar street lights), and accessories such as solar generators, security cameras and power banks. Use the Products Directory above to browse each category."}}, {"@type": "Question", "name": "How do I know what size inverter and battery I need?", "acceptedAnswer": {"@type": "Answer", "text": "Use our free Estimation Tool. Enter the appliances you run at home (lights, fans, TV, fridge, AC, pump) and it recommends an inverter size, battery capacity and number of panels. For a bigger home, a business, or a setup the tool does not cover, message us and we will size it with you."}}, {"@type": "Question", "name": "How do I pay for my order?", "acceptedAnswer": {"@type": "Answer", "text": "Add items to your cart, enter your name, email and phone number, choose your delivery location and pay securely with Paystack in Naira. Your order details are sent to us on WhatsApp once payment goes through."}}, {"@type": "Question", "name": "What happens after I place an order?", "acceptedAnswer": {"@type": "Answer", "text": "We confirm your order with you on WhatsApp, arrange delivery or pickup, and keep you updated until it reaches you. If anything about your order needs adjusting, we will tell you before dispatch."}}, {"@type": "Question", "name": "How much is delivery?", "acceptedAnswer": {"@type": "Answer", "text": "Delivery fees depend on your location and are shown in the cart when you choose your delivery area."}}, {"@type": "Question", "name": "Can I pick up my order from your store?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, pickup is free. Collect from our store at 18 Sarah Faboyede Street, Bucknor Ejigbo, Lagos. Select Pickup at Store in the cart at checkout."}}, {"@type": "Question", "name": "Do the products come with a warranty?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Warranty terms differ by product and brand, so the cover for batteries, inverters and panels is not the same. Ask us on WhatsApp before you order and we will confirm the warranty for the exact item you want."}}, {"@type": "Question", "name": "I cannot find the product I need. What should I do?", "acceptedAnswer": {"@type": "Answer", "text": "Our Combo Deals and Energy Saving Appliances ranges are still being expanded, and we can source items that are not listed yet. Tell us what you need on WhatsApp and we will get back to you with options and prices."}}]}</script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  var el=document.getElementById('faqDelivery'), S=window.SUNERGYX_SHIPPING;
+  if(!el||!S||!S.length) return;
+  var fmt=function(n){return n?'₦'+Number(n).toLocaleString('en-NG'):'Free';};
+  var rows=S.map(function(r){return '<li><span>'+r.label.split(' — ')[0]+'</span><b>'+fmt(r.fee)+'</b></li>';}).join('');
+  el.innerHTML='Delivery is priced by location:</p><ul class="faq-fees">'+rows+'</ul><p>Fees for heavy or bulky orders (such as batteries and large inverters) may change, and for other states we confirm the final fee with you on WhatsApp.';
+});
+</script>
 
 <footer class="footer" id="contact">
   <div class="footer-inner"><div class="footer-left"><div style="width:36px;height:36px;background:#10A75F;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;border-radius:4px">SX</div><div class="footer-copy">© 2026 SunergyX — Solar Power Solution</div></div><div class="footer-right"><span>✆ +234 708 444 1471</span><span>@ info@sunergyx.com.ng</span></div></div>

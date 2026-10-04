@@ -1,51 +1,58 @@
 [
   {
-    "key": "Panels",
-    "title": "Solar Panels",
-    "image": "https://res.cloudinary.com/haqeg3gc/image/upload/v1791114390/003-300x300.jpg",
+    "key": "Combos",
+    "title": "Combo Deals",
+    "image": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20150%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%2310A75F%22%20stroke-width%3D%225%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M100%2038l42%2018v38l-42%2018-42-18V56z%22%2F%3E%3Cpath%20d%3D%22M58%2056l42%2018%2042-18M100%2074v38%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%22152%22%20cy%3D%2238%22%20r%3D%2216%22%20fill%3D%22%23D4A017%22%2F%3E%3Cpath%20d%3D%22M152%2030v16M144%2038h16%22%20stroke%3D%22%23fff%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E",
     "visible": true,
     "order": 0
   },
   {
-    "key": "Inverters",
-    "title": "Inverters",
-    "image": "https://res.cloudinary.com/haqeg3gc/image/upload/v1791114729/Fronius_Symo_advanced_solar_inverter_copy__04966.webp",
+    "key": "Panels",
+    "title": "Solar Panels",
+    "image": "https://res.cloudinary.com/haqeg3gc/image/upload/v1791114390/003-300x300.jpg",
     "visible": true,
     "order": 1
+  },
+  {
+    "key": "Inverters",
+    "title": "Inverters",
+    "image": "https://res.cloudinary.com/haqeg3gc/image/upload/v1791114869/felicity.webp",
+    "visible": true,
+    "order": 2
   },
   {
     "key": "Batteries",
     "title": "Batteries",
     "image": "https://res.cloudinary.com/ny0or3ln/image/upload/v1790635769/10KWhg_fmpy4h.png",
     "visible": true,
-    "order": 2
+    "order": 3
   },
   {
     "key": "Controllers",
     "title": "Charge Controllers",
-    "image": "https://res.cloudinary.com/haqeg3gc/image/upload/v1791114869/felicity.webp",
+    "image": "https://res.cloudinary.com/haqeg3gc/image/upload/v1791114729/Fronius_Symo_advanced_solar_inverter_copy__04966.webp",
     "visible": true,
-    "order": 3
+    "order": 4
   },
   {
     "key": "Breakers",
     "title": "Breakers & Protection",
     "image": "https://res.cloudinary.com/haqeg3gc/image/upload/v1791115000/modulinis-apsauginis-nuolatines-itampos-automatinis-jungiklis-saules-moduliams-2p-40a-1000vdc-6ka-din-kopija-4-1-1-1-1.png",
     "visible": true,
-    "order": 4
+    "order": 5
   },
   {
-    "key": "Cables",
-    "title": "Cables",
-    "image": "https://res.cloudinary.com/haqeg3gc/image/upload/v1791114405/cables.jpg",
+    "key": "Appliances",
+    "title": "Energy Saving Appliances",
+    "image": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20150%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%2310A75F%22%20stroke-width%3D%225%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M100%2028a32%2032%200%200%200-18%2058c4%203%206%207%206%2012h24c0-5%202-9%206-12a32%2032%200%200%200-18-58z%22%2F%3E%3Cpath%20d%3D%22M90%20110h20M93%20120h14%22%2F%3E%3Cpath%20d%3D%22M100%2052v26M92%2062l8%208%208-8%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E",
     "visible": true,
-    "order": 5
+    "order": 6
   },
   {
     "key": "Accessories",
     "title": "Accessories",
     "image": "https://res.cloudinary.com/haqeg3gc/image/upload/v1791115103/images.jpg",
     "visible": true,
-    "order": 6
+    "order": 7
   }
 ]

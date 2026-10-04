@@ -14,21 +14,23 @@
     PER_PAGE: 8,
     FALLBACK_IMG: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?q=80&w=400&auto=format&fit=crop',
     SECTIONS: [
+      {key:'Combos', title:'Combo Deals'},
       {key:'Panels', title:'Solar Panels'},
       {key:'Inverters', title:'Inverters'},
       {key:'Batteries', title:'Batteries'},
       {key:'Controllers', title:'Charge Controllers'},
       {key:'Breakers', title:'Breakers & Protection'},
-      {key:'Cables', title:'Cables'},
+      {key:'Appliances', title:'Energy Saving Appliances'},
       {key:'Accessories', title:'Accessories'}
     ],
     CATEGORY_IMAGES: {
+      Combos:'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20150%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%2310A75F%22%20stroke-width%3D%225%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M100%2038l42%2018v38l-42%2018-42-18V56z%22%2F%3E%3Cpath%20d%3D%22M58%2056l42%2018%2042-18M100%2074v38%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%22152%22%20cy%3D%2238%22%20r%3D%2216%22%20fill%3D%22%23D4A017%22%2F%3E%3Cpath%20d%3D%22M152%2030v16M144%2038h16%22%20stroke%3D%22%23fff%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E',
+      Appliances:'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20150%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%2310A75F%22%20stroke-width%3D%225%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M100%2028a32%2032%200%200%200-18%2058c4%203%206%207%206%2012h24c0-5%202-9%206-12a32%2032%200%200%200-18-58z%22%2F%3E%3Cpath%20d%3D%22M90%20110h20M93%20120h14%22%2F%3E%3Cpath%20d%3D%22M100%2052v26M92%2062l8%208%208-8%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E',
       Panels:'https://images.unsplash.com/photo-1509391365360-2e959784a276?q=80&w=800&auto=format&fit=crop',
       Inverters:'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?q=80&w=800&auto=format&fit=crop',
       Batteries:'https://res.cloudinary.com/ny0or3ln/image/upload/v1790635769/10KWhg_fmpy4h.png',
       Controllers:'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?q=80&w=800&auto=format&fit=crop',
       Breakers:'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=800&auto=format&fit=crop',
-      Cables:'https://images.unsplash.com/photo-1611365892117-00ac5ef43c90?q=80&w=800&auto=format&fit=crop',
       Accessories:'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?q=80&w=800&auto=format&fit=crop'
     }
   };
@@ -154,7 +156,7 @@
   const uniqBy = (arr,key)=> [...new Set(arr.map(p=>p[key]).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
   function setSelectOptions(id, values, allLabel, keepValue){ const el=document.getElementById(id); if(!el) return; const current=keepValue ?? el.value; el.innerHTML=''; const all=document.createElement('option'); all.value='ALL'; all.textContent=allLabel; el.appendChild(all); values.forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v; el.appendChild(o); }); el.value = (current && values.includes(current)) ? current : 'ALL'; }
   function refreshDropdowns(resetType=false){ const catEl=document.querySelector('#categoryFilter'), typeEl=document.querySelector('#typeFilter'), brandEl=document.querySelector('#brandFilter'); if(!catEl||!typeEl||!brandEl) return; const isAll=catEl.value==='ALL'; typeEl.disabled=brandEl.disabled=isAll; if(isAll){ setSelectOptions('typeFilter',[],'② All Types'); setSelectOptions('brandFilter',[],'③ All Brands'); return; } const pool=products.filter(p=>p.category===catEl.value); setSelectOptions('typeFilter', uniqBy(pool,'type'), '② All Types', resetType?null:typeEl.value); const t=typeEl.value; const brandPool=pool.filter(p=> t==='ALL'||p.type===t); setSelectOptions('brandFilter', uniqBy(brandPool,'brand'), '③ All Brands', brandEl.value); }
-  function fillFilters(){ const sel=document.querySelector('#categoryFilter'); if(!sel) return; [...sel.options].forEach(o=>{ if(o.value!=='ALL' && !products.some(p=>p.category===o.value)) o.remove(); }); refreshDropdowns(true); }
+  function fillFilters(){ const sel=document.querySelector('#categoryFilter'); if(!sel) return; sel.innerHTML='<option value="ALL">① Select Category</option>'+CONFIG.SECTIONS.map(x=>`<option value="${x.key}">${x.title}</option>`).join(''); refreshDropdowns(true); }
   function getFilterValues(){ return { query: (document.querySelector('#searchInput')?.value||'').trim().toLowerCase(), cat: document.querySelector('#categoryFilter')?.value||'ALL', brand: document.querySelector('#brandFilter')?.value||'ALL', type: document.querySelector('#typeFilter')?.value||'ALL', promoOnly: document.querySelector('#promoOnly')?.checked||false }; }
   function filterProducts(){ sectionPage={}; const {query,cat,brand,type,promoOnly}=getFilterValues(); if(cat==='ALL'&&!query&&!promoOnly){ renderLanding(); return; } const filtered=products.filter((p,idx)=>{ if(cat!=='ALL'&&p.category!==cat) return false; if(brand!=='ALL'&&p.brand!==brand) return false; if(type!=='ALL'&&p.type!==type) return false; if(promoOnly && !(p.promo||effPrice(p)<p.price)) return false; if(query && !searchIndex[idx].includes(query)) return false; return true; }); renderProducts(filtered); }
   
@@ -162,20 +164,19 @@
     const root=document.querySelector('#productGrid'); if(!root) return;
     if(!categoryTiles.length) categoryTiles = loadCategoryTiles();
     const visibleTiles = categoryTiles.filter(t=>t.visible).sort((a,b)=>a.order-b.order);
-    root.innerHTML=`<p class="landing-note">Choose a category from menu, or tap a tile below.</p>
-      <div class="tile-grid">${visibleTiles.map(t=>{
-        const items=products.filter(p=>p.category===t.key); 
-        const brands=new Set(items.map(p=>p.brand)).size;
+    root.innerHTML=`<div class="tile-grid">${visibleTiles.map(t=>{
+        const items=products.filter(p=>p.category===t.key);
+        const types=new Set(items.map(p=>p.type).filter(Boolean)).size;
+        const meta = items.length ? `${items.length} product${items.length>1?'s':''}${types>1?' · '+types+' types':''}` : 'Coming soon';
         return `<button class="tile" onclick="SunergyX.pickCategory('${t.key}')" aria-label="${t.title}">
-          <img src="${thumb(t.image,500)}" alt="${t.title}" loading="lazy" decoding="async">
-          <div class="tile-ov"></div>
-          <div class="tile-txt"><h3>${t.title}</h3><p>${items.length} products · ${brands} brands</p><span>Browse →</span></div>
+          <div class="tile-img"><img src="${thumb(t.image,500)}" alt="" loading="lazy" decoding="async"></div>
+          <div class="tile-txt"><div><h3>${t.title}</h3><p>${meta}</p></div><i class="tile-go" aria-hidden="true">›</i></div>
         </button>`;
       }).join('')}</div>`;
   }
   function cardHTML(p){ const sale=effPrice(p)<p.price, price=effPrice(p); return `<div class="pimg"><img src="${thumb(p.image,400)}" alt="${p.title}" width="400" height="180" loading="lazy"><span class="pbadge">${p.brand? p.brand+' · ' : ''}${p.type||p.category}</span>${(p.promo||sale)?`<span class="ppromo">${p.promo||'SALE'}</span>`:''}</div><div class="pbody"><h3>${p.title}</h3><p>${cleanDesc(p.desc)}</p></div><div class="pfoot"><div><small>Price</small>${sale?`<s>${formatNaira(p.price)}</s>`:''}<b>${formatNaira(price)}</b></div><button onclick="SunergyX.addToCart('${p.id}')">+ Add</button></div>`; }
   function pagerHTML(key,page,pages){ if(pages<=1) return ''; const btn=(l,n,a,d)=>`<button ${d?'disabled':''} onclick="SunergyX.goPage('${key}',${n})" class="${a?'active':''}">${l}</button>`; const nums=[]; for(let i=1;i<=pages;i++){ if(i===1||i===pages||Math.abs(i-page)<=1) nums.push(i); else if(nums[nums.length-1]!=='…') nums.push('…'); } return `<div class="pager">${btn('‹',page-1,false,page===1)}${nums.map(n=> n==='…' ? '<span style="padding:8px">…</span>' : btn(n,n,n===page,false)).join('')}${btn('›',page+1,false,page===pages)}</div>`; }
-  function renderProducts(list){ currentList=list; const root=document.querySelector('#productGrid'); if(!root) return; root.innerHTML=''; if(!list.length){ root.innerHTML=`<div style="text-align:center;padding:40px"><p class="landing-note">No equipment found.</p></div>`; return; } const groups=CONFIG.SECTIONS.map(s=>({...s, items:list.filter(p=>p.category===s.key)})).filter(g=>g.items.length); const nav=document.createElement('div'); nav.className='jump-nav'; nav.innerHTML=groups.map(g=>`<a href="#sec-${g.key}" onclick="event.preventDefault();document.getElementById('sec-${g.key}').scrollIntoView({behavior:'smooth'})">${g.title} <span>(${g.items.length})</span></a>`).join(''); root.appendChild(nav); const frag=document.createDocumentFragment(); groups.forEach(g=>{ const pages=Math.ceil(g.items.length/CONFIG.PER_PAGE), page=Math.min(Math.max(sectionPage[g.key]||1,1),pages); sectionPage[g.key]=page; const slice=g.items.slice((page-1)*CONFIG.PER_PAGE, page*CONFIG.PER_PAGE); const sec=document.createElement('div'); sec.id='sec-'+g.key; sec.className='psection'; sec.innerHTML=`<div class="psec-head"><h3>${g.title}</h3><span>Showing ${(page-1)*CONFIG.PER_PAGE+1}–${(page-1)*CONFIG.PER_PAGE+slice.length} of ${g.items.length}</span></div>`; const grid=document.createElement('div'); grid.className='pgrid'; slice.forEach(p=>{ const card=document.createElement('div'); card.className='pcard'; card.innerHTML=cardHTML(p); grid.appendChild(card); }); sec.appendChild(grid); const pagerWrap=document.createElement('div'); pagerWrap.innerHTML=pagerHTML(g.key,page,pages); sec.appendChild(pagerWrap); frag.appendChild(sec); }); root.appendChild(frag); }
+  function renderProducts(list){ currentList=list; const root=document.querySelector('#productGrid'); if(!root) return; root.innerHTML=''; if(!list.length){ { const c=getFilterValues().cat, sec=CONFIG.SECTIONS.find(x=>x.key===c); root.innerHTML = (sec && !getFilterValues().query) ? `<div style="text-align:center;padding:40px"><p class="landing-note" style="padding-bottom:12px">No ${sec.title} listed yet.</p><a class="calc-cta" style="display:inline-block;padding:12px 24px" target="_blank" rel="noopener" href="https://wa.me/${waNumber}?text=${encodeURIComponent('Hello SunergyX, I am interested in '+sec.title)}">Ask us on WhatsApp</a></div>` : `<div style="text-align:center;padding:40px"><p class="landing-note">No equipment found.</p></div>`; return; } } const groups=CONFIG.SECTIONS.map(s=>({...s, items:list.filter(p=>p.category===s.key)})).filter(g=>g.items.length); const nav=document.createElement('div'); nav.className='jump-nav'; nav.innerHTML=groups.map(g=>`<a href="#sec-${g.key}" onclick="event.preventDefault();document.getElementById('sec-${g.key}').scrollIntoView({behavior:'smooth'})">${g.title} <span>(${g.items.length})</span></a>`).join(''); root.appendChild(nav); const frag=document.createDocumentFragment(); groups.forEach(g=>{ const pages=Math.ceil(g.items.length/CONFIG.PER_PAGE), page=Math.min(Math.max(sectionPage[g.key]||1,1),pages); sectionPage[g.key]=page; const slice=g.items.slice((page-1)*CONFIG.PER_PAGE, page*CONFIG.PER_PAGE); const sec=document.createElement('div'); sec.id='sec-'+g.key; sec.className='psection'; sec.innerHTML=`<div class="psec-head"><h3>${g.title}</h3><span>Showing ${(page-1)*CONFIG.PER_PAGE+1}–${(page-1)*CONFIG.PER_PAGE+slice.length} of ${g.items.length}</span></div>`; const grid=document.createElement('div'); grid.className='pgrid'; slice.forEach(p=>{ const card=document.createElement('div'); card.className='pcard'; card.innerHTML=cardHTML(p); grid.appendChild(card); }); sec.appendChild(grid); const pagerWrap=document.createElement('div'); pagerWrap.innerHTML=pagerHTML(g.key,page,pages); sec.appendChild(pagerWrap); frag.appendChild(sec); }); root.appendChild(frag); }
   const goPage = (key,n)=>{ sectionPage[key]=n; renderProducts(currentList); document.getElementById('sec-'+key)?.scrollIntoView({behavior:'smooth'}); };
   const pickCategory = (key)=>{ const c=document.querySelector('#categoryFilter'); if(c){ c.value=key; refreshDropdowns(true); filterProducts(); } document.querySelector('#productGrid')?.scrollIntoView({behavior:'smooth'}); };
   const clearFilters = ()=>{ const s=document.querySelector('#searchInput'); if(s) s.value=''; const c=document.querySelector('#categoryFilter'); if(c) c.value='ALL'; const p=document.querySelector('#promoOnly'); if(p) p.checked=false; refreshDropdowns(true); renderLanding(); };
