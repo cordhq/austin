@@ -282,10 +282,58 @@ html{scroll-behavior:smooth}
 .terms-foot{padding:14px 24px; border-top:1px solid #E5E7EB; text-align:right}
 .terms-ok{background:#10A75F; color:#fff; border:0; padding:11px 24px; border-radius:4px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; cursor:pointer}
 .terms-ok:hover{background:#0E9A56}
-@media(max-width:760px){.footer-top{grid-template-columns:1fr; gap:28px}.news-form{flex-direction:column}.news-form button{width:100%}.terms-overlay{padding:0; align-items:flex-end}.terms-box{max-height:92vh; border-radius:14px 14px 0 0}}
+@media(max-width:760px){.footer-top{grid-template-columns:1fr; gap:28px}.terms-overlay{padding:0; align-items:flex-end}.terms-box{max-height:92vh; border-radius:14px 14px 0 0}}
 
 .footer-right{flex-wrap:wrap; gap:10px 22px}
 .terms-body ul{margin:0 0 8px; padding-left:20px}
 .terms-body li{margin-bottom:4px}
 .terms-body a{color:#10A75F; font-weight:700; text-decoration:underline}
 .terms-body .faq-fees{padding:0; margin:8px 0 12px}
+
+/* ---- calculator ---- */
+.calc-in{display:flex; gap:8px; align-items:flex-end}
+.calc-in label{display:flex; flex-direction:column; align-items:center; gap:3px; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#6B7280}
+.calc-item input{width:54px; padding:6px 4px}
+.calc-opts{margin-top:16px; padding:12px 14px; background:#FFFBEB; border:1px solid #F3E7B5; display:flex; flex-direction:column; gap:8px}
+.calc-opts label{font-size:12px; font-weight:800}
+.calc-opts select{padding:10px; border:1px solid #E5E7EB; background:#fff; font-size:13px; font-family:inherit; width:100%}
+.calc-assume{font-size:11px; color:#6B7280; margin-top:4px; line-height:1.55}
+.calc-picks{margin-top:24px; background:#fff; border:1px solid #BFE8D1; box-shadow:0 0 24px -6px rgba(16,167,95,.2); padding:28px}
+.calc-picks-head{margin-bottom:18px}
+.calc-picks-head h3{font-size:18px; font-weight:800}
+.calc-picks-head p{font-size:12px; color:#6B7280; margin-top:4px}
+.calc-pick-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+.calc-pick{display:flex; gap:14px; border:1px solid #E5E7EB; border-radius:10px; padding:12px; background:#fff; min-width:0}
+.calc-pick.unavailable{background:#F9FAFB; border-style:dashed}
+.cp-img{width:84px; height:84px; flex-shrink:0; background:#F0FAF4; border-radius:8px; overflow:hidden}
+.cp-img img{width:100%; height:100%; object-fit:contain; padding:6px}
+.cp-body{min-width:0; flex:1; display:flex; flex-direction:column; gap:3px}
+.cp-tag{font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#10A75F}
+.cp-body h4{font-size:13px; font-weight:800; line-height:1.3}
+.cp-body p{font-size:11px; color:#6B7280}
+.cp-price{margin-top:auto; padding-top:6px; display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-size:11px; color:#6B7280}
+.cp-price b{font-size:15px; color:#10A75F; font-weight:900}
+.calc-total{margin-top:18px; display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; padding:16px 18px; background:#F0FAF4; border:1px solid #D6EEDF; border-radius:10px}
+.calc-total small{display:block; font-size:11px; color:#6B7280}
+.calc-total strong{font-size:26px; font-weight:900; color:#0E9A56}
+.calc-btns{display:flex; gap:10px; flex-wrap:wrap}
+.calc-btns .calc-cta{margin:0; padding:13px 20px; border:0; cursor:pointer; font-family:inherit}
+.calc-cta.alt{background:#fff; color:#10A75F; border:1px solid #10A75F}
+.calc-cta.alt:hover{background:#F0FAF4}
+.calc-empty{font-size:13px; color:#6B7280; padding:6px 0}
+.calc-note{font-size:11px; color:#9CA3AF; margin-top:12px; line-height:1.5}
+@media(max-width:1024px){.calc-pick-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.calc-panel,.calc-picks{padding:18px}.calc-total strong{font-size:22px}.calc-btns{width:100%}.calc-btns .calc-cta{flex:1; text-align:center; padding:13px 10px}.calc-item{flex-wrap:wrap}}
+
+/* ---- mobile footer / newsletter: compact, side-by-side form ---- */
+@media(max-width:760px){
+  .footer-top{gap:20px; padding-bottom:20px; margin-bottom:20px}
+  .footer-news h3{font-size:16px}
+  .footer-news p{font-size:12px; margin-bottom:10px}
+  .news-form{flex-direction:row; align-items:stretch; gap:6px}
+  .news-form input[type=email]{height:42px; flex:1 1 auto; font-size:14px}
+  .news-form button{height:42px; flex:0 0 auto; padding:0 16px; width:auto}
+  .footer-news small{margin-top:8px}
+  .footer-links{display:grid; grid-template-columns:1fr 1fr; gap:8px 16px}
+  .footer-links h4{grid-column:1/-1; margin-bottom:0}
+}

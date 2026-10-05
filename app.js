@@ -225,14 +225,116 @@
     handler.openIframe();
   }
 
+  /* ---------- Solar load calculator + top-end product picks ---------- */
+  const APPLIANCES = [
+    {id:'lights',  name:'LED Bulbs',                spec:'10W each',                    w:10,   qty:10, hrs:6},
+    {id:'fans',    name:'Standing / Ceiling Fans',  spec:'75W each',                    w:75,   qty:4,  hrs:8},
+    {id:'tvs',     name:'Smart TV',                 spec:'120W each',                   w:120,  qty:2,  hrs:5},
+    {id:'laptops', name:'Laptop / Desktop',         spec:'100W each',                   w:100,  qty:2,  hrs:6},
+    {id:'fridges', name:'Fridge',                   spec:'250W, motor runs about 10h/day', w:250, qty:1, hrs:10, motor:true},
+    {id:'freezers',name:'Deep Freezer',             spec:'350W, motor runs about 10h/day', w:350, qty:0, hrs:10, motor:true},
+    {id:'acs',     name:'Air Conditioner 1.5HP',    spec:'1200W',                       w:1200, qty:1,  hrs:6,  motor:true},
+    {id:'pumps',   name:'Water Pump',               spec:'750W',                        w:750,  qty:0,  hrs:1,  motor:true},
+    {id:'washers', name:'Washing Machine',          spec:'500W',                        w:500,  qty:0,  hrs:1,  motor:true},
+    {id:'irons',   name:'Electric Iron',            spec:'1000W',                       w:1000, qty:0,  hrs:1}
+  ];
+  const num = (t,re) => { const m=String(t||'').match(re); return m ? parseFloat(m[1]) : null; };
+  const kvaOf  = p => num(p.title,/(\d+(?:\.\d+)?)\s*kva/i);
+  const kwhOf  = p => num(p.title,/(\d+(?:\.\d+)?)\s*kwh/i);
+  const wattOf = p => num(p.title,/(\d+)\s*w\b/i);
+  const invV   = p => num(p.title,/(\d+)\s*v\b/i) || ((kvaOf(p)||0)>=3 ? 48 : (kvaOf(p)||0)>=1.8 ? 24 : 12);
+  const premium = (list, unit) => list.slice().sort((a,b)=> (effPrice(b)/unit(b))-(effPrice(a)/unit(a)) || unit(a)-unit(b))[0] || null;
+  const inStock = p => p.stock!==0 && effPrice(p)>0;
+  let calcState = null, calcKey = '';
+
+  function renderCalcItems(){
+    const box=document.querySelector('.calc-items'); if(!box) return;
+    box.innerHTML = APPLIANCES.map(a=>`<div class="calc-item"><div><strong>${a.name}</strong><span>${a.spec}</span></div><div class="calc-in"><label>Qty<input type="number" inputmode="numeric" min="0" max="99" value="${a.qty}" data-id="${a.id}" data-k="qty" aria-label="${a.name} quantity"></label><label>Hrs/day<input type="number" inputmode="decimal" min="0" max="24" step="0.5" value="${a.hrs}" data-id="${a.id}" data-k="hrs" aria-label="${a.name} hours per day"></label></div></div>`).join('');
+  }
+  function calcSpecs(){
+    let running=0, daily=0, bigMotor=0;
+    APPLIANCES.forEach(a=>{
+      const val=k=>Number(document.querySelector(`.calc-items [data-id="${a.id}"][data-k="${k}"]`)?.value)||0;
+      const q=Math.max(0,Math.min(99,val('qty'))), hrs=Math.max(0,Math.min(24,val('hrs')));
+      running+=q*a.w; daily+=q*a.w*hrs; if(q>0 && a.motor) bigMotor=Math.max(bigMotor,a.w);
+    });
+    const share=Number(document.querySelector('#calcBackup')?.value)||0.6;
+    const kva=Math.max(running*1.25,(running+bigMotor*2)/2)/0.8/1000;
+    const dailyKwh=daily/1000;
+    return { running, daily, dailyKwh, kva, share, batteryKwh: dailyKwh*share/(0.9*0.92), panelW: daily/(5*0.75) };
+  }
+  function pickInverter(kva,needV){
+    const fit=products.filter(p=>p.category==='Inverters' && inStock(p) && !/\+/.test(p.title) && /Hybrid|All-in-One/.test(p.type) && kvaOf(p) && kvaOf(p)>=kva-1e-6 && invV(p)>=needV);
+    if(!fit.length) return null;
+    const minK=Math.min(...fit.map(kvaOf));
+    return premium(fit.filter(p=>kvaOf(p)<=minK*1.5), kvaOf);
+  }
+  function pickBattery(kwh,V){
+    const base=products.filter(p=>p.category==='Batteries' && inStock(p) && !/\+/.test(p.title) && kwhOf(p) && num(p.type,/Lithium\s+(\d+)V/)===V);
+    if(!base.length) return null;
+    const opts=base.map(p=>{ const u=kwhOf(p), n=Math.max(1,Math.ceil(kwh/u-1e-6)); return {p,u,n,total:n*u}; });
+    let ok=opts.filter(o=>o.n<=4 && o.total<=Math.max(kwh*1.5,kwh+3));
+    if(!ok.length) ok=opts.filter(o=>o.n<=8);
+    if(!ok.length) ok=opts;
+    ok.sort((a,b)=>(effPrice(b.p)/b.u)-(effPrice(a.p)/a.u) || a.n-b.n);
+    return ok[0];
+  }
+  function pickPanel(w){
+    const p=premium(products.filter(x=>x.category==='Panels' && inStock(x) && (wattOf(x)||0)>=450), wattOf);
+    return p ? {p, n:Math.max(1,Math.ceil(w/wattOf(p)))} : null;
+  }
+  function pickCard(tag, p, qty, sub){
+    if(!p) return `<div class="calc-pick unavailable"><div class="cp-body"><span class="cp-tag">${tag}</span><h4>No matching product listed</h4><p>Message us for a custom quote for this size.</p></div></div>`;
+    const unit=effPrice(p);
+    return `<div class="calc-pick"><div class="cp-img"><img src="${thumb(p.image,240)}" alt="" loading="lazy" decoding="async"></div><div class="cp-body"><span class="cp-tag">${tag}</span><h4>${p.title}</h4><p>${sub}</p><div class="cp-price"><span>${qty} &times; ${formatNaira(unit)}</span><b>${formatNaira(unit*qty)}</b></div></div></div>`;
+  }
+  function renderCalcPicks(s){
+    const box=document.querySelector('#calcPicks'); if(!box) return;
+    if(s.running<=0 || s.daily<=0){ calcState=null; calcKey=''; box.innerHTML='<p class="calc-empty">Add at least one appliance (quantity and hours above 0) to see top-end product prices.</p>'; return; }
+    const needV=(s.kva>=3||s.batteryKwh>=5)?48:(s.kva>=1.8||s.batteryKwh>=2.5)?24:12;
+    const inv=pickInverter(s.kva,needV), V=inv?invV(inv):needV;
+    const bat=pickBattery(s.batteryKwh,V), pan=pickPanel(s.panelW);
+    const key=[inv?.id,bat?.p.id,bat?.n,pan?.p.id,pan?.n].join('|');
+    const rows=[]; if(inv) rows.push({p:inv,qty:1}); if(bat) rows.push({p:bat.p,qty:bat.n}); if(pan) rows.push({p:pan.p,qty:pan.n});
+    const total=rows.reduce((t,r)=>t+effPrice(r.p)*r.qty,0);
+    calcState={items:rows,total};
+    if(key===calcKey){ const t=box.querySelector('.calc-total strong'); if(t) t.textContent=formatNaira(total); return; }
+    calcKey=key;
+    const complete=rows.length===3;
+    const msg=`Hello SunergyX, I used your calculator (about ${(s.running/1000).toFixed(1)} kW load, ${s.dailyKwh.toFixed(1)} kWh/day). Top-end picks: `+rows.map(r=>`${r.qty}x ${r.p.title}`).join('; ')+`. Estimated ${formatNaira(total)}. Please confirm availability and delivery.`;
+    box.innerHTML=`<div class="calc-pick-grid">${pickCard('Inverter',inv,1,inv?`${inv.brand} &middot; ${kvaOf(inv)} kVA &middot; ${invV(inv)}V`:'')}${pickCard('Battery',bat&&bat.p,bat&&bat.n,bat?`${bat.p.brand} &middot; ${bat.n>1?bat.n+' units = ':''}${+(bat.total).toFixed(1)} kWh total`:'')}${pickCard('Solar Panels',pan&&pan.p,pan&&pan.n,pan?`${pan.p.brand} &middot; ${pan.n*wattOf(pan.p)} W total`:'')}</div>
+      <div class="calc-total"><div><small>${complete?'Estimated equipment total':'Estimated total (items listed above)'}</small><strong>${formatNaira(total)}</strong></div>
+      <div class="calc-btns"><button type="button" class="calc-cta" onclick="SunergyX.addCalcSystem()">Add Full System to Cart</button><a class="calc-cta alt" target="_blank" rel="noopener" href="https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}">Get a Quote on WhatsApp</a></div></div>
+      <p class="calc-note">Prices exclude delivery, mounting structure, cabling, protection and installation. Prices and stock can change.</p>`;
+  }
   function calculateSolarLoad(){
-    const v=id=>Number(document.querySelector('#'+id)?.value)||0; const total=v('load_lights')*10 + v('load_fans')*75 + v('load_tvs')*120 + v('load_fridges')*250 + v('load_acs')*1200 + v('load_pumps')*750;
-    const el=document.querySelector('#calcTotalWatts'); if(el) el.textContent=total.toLocaleString()+' W';
-    let inverter='1.5 kVA Pure Sine Wave', battery='2.5kWh Lithium (24V)', panels='2x 550W Mono Panels';
-    if(total>4000){ inverter='7.5 kVA to 10 kVA Hybrid'; battery='20kWh Lithium Bank (48V)'; panels='12x 550W Mono Panels'; }
-    else if(total>2200){ inverter='5 kVA Hybrid 48V'; battery='10kWh Lithium Wall (48V)'; panels='8x 550W Mono Panels'; }
-    else if(total>1000){ inverter='3.5 kVA Hybrid'; battery='5kWh Lithium (48V)'; panels='4x 550W Mono Panels'; }
-    const inv=document.querySelector('#calcInverterRating'); if(inv) inv.textContent=inverter; const bat=document.querySelector('#calcBatteryCapacity'); if(bat) bat.textContent=battery; const pan=document.querySelector('#calcPanelsCount'); if(pan) pan.textContent=panels;
+    const s=calcSpecs(), set=(id,t)=>{ const e=document.getElementById(id); if(e) e.textContent=t; };
+    if(s.running<=0 || s.daily<=0){ ['calcTotalWatts','calcDailyKwh','calcInverterRating','calcBatteryCapacity','calcPanelsCount'].forEach(id=>set(id,'\u2014')); renderCalcPicks(s); return; }
+    const needV=(s.kva>=3||s.batteryKwh>=5)?48:(s.kva>=1.8||s.batteryKwh>=2.5)?24:12;
+    set('calcTotalWatts', s.running.toLocaleString('en-NG')+' W');
+    set('calcDailyKwh', s.dailyKwh.toFixed(1)+' kWh / day');
+    set('calcInverterRating', '\u2265 '+(Math.ceil(s.kva*2)/2)+' kVA Hybrid');
+    set('calcBatteryCapacity', '\u2248 '+s.batteryKwh.toFixed(1)+' kWh Lithium ('+needV+'V)');
+    set('calcPanelsCount', '\u2248 '+(s.panelW/1000).toFixed(1)+' kWp of panels');
+    renderCalcPicks(s);
+  }
+  function addCalcSystem(){
+    if(!calcState || !calcState.items.length){ showToast('Add appliances first','warning'); return; }
+    let capped=false;
+    calcState.items.forEach(({p,qty})=>{
+      const cap=p.stock||10, n=Math.min(qty,cap); if(n<qty) capped=true;
+      const ex=cart.find(i=>i.id===p.id);
+      if(ex) ex.qty=Math.min(cap,ex.qty+n); else cart.push({id:p.id,title:p.title,image:p.image,price:effPrice(p),brand:p.brand,type:p.type,qty:n,stock:cap});
+    });
+    saveCart(); renderCart(); toggleCart(true); showToast('System added to your cart','success');
+    if(capped) showToast('Some quantities are above our listed stock. Message us to confirm the rest.','warning');
+  }
+  function initCalculator(){
+    const sec=document.querySelector('#calculator'); if(!sec) return;
+    renderCalcItems();
+    const run=debounce(calculateSolarLoad,120);
+    sec.addEventListener('input',run); sec.addEventListener('change',calculateSolarLoad);
+    calculateSolarLoad();
   }
 
   /* ---------- Featured products slider (random picks, auto-slides) ---------- */
@@ -271,7 +373,7 @@
 
   function initApp(){
     products=window.THQ_PRODUCTS||[]; if(!products.length){ document.querySelector('#productGrid')&&( document.querySelector('#productGrid').innerHTML='<p class="landing-note">Products could not be loaded.</p>'); return; }
-    buildSearchIndex(); loadCart(); loadSettings(); renderCart(); fillFilters(); renderLanding(); initFeatured(); calculateSolarLoad(); renderShippingOptions(); loadCustomer(); renderCart();
+    buildSearchIndex(); loadCart(); loadSettings(); renderCart(); fillFilters(); renderLanding(); initFeatured(); initCalculator(); renderShippingOptions(); loadCustomer(); renderCart();
     document.querySelector('#searchInput')?.addEventListener('input', debounce(()=>filterProducts(),250));
     document.querySelector('#categoryFilter')?.addEventListener('change', ()=>{ refreshDropdowns(true); filterProducts(); });
     document.querySelector('#typeFilter')?.addEventListener('change', ()=>{ refreshDropdowns(false); filterProducts(); });
@@ -280,10 +382,9 @@
     document.querySelector('#custShipping')?.addEventListener('change', ()=>{ updateShippingNote(); renderCart(); saveCustomer(); });
     document.querySelector('#cartDrawer')?.addEventListener('click', e=>{ if(e.target.id==='cartDrawer') toggleCart(false); });
     document.addEventListener('keydown', e=>{ if(e.key==='Escape' && !document.querySelector('#cartDrawer')?.classList.contains('hidden')) toggleCart(false); });
-    document.querySelectorAll('.calc-item input').forEach(inp=> inp.addEventListener('input', calculateSolarLoad));
   }
 
-  window.SunergyX = { addToCart, updateCartQty, removeCartItem, toggleCart, pickCategory, goPage, clearFilters, filterProducts: debounce(filterProducts,150), calculateSolarLoad, initiatePaystackCheckout, clearCart };
+  window.SunergyX = { addToCart, updateCartQty, removeCartItem, toggleCart, pickCategory, goPage, clearFilters, filterProducts: debounce(filterProducts,150), calculateSolarLoad, addCalcSystem, initiatePaystackCheckout, clearCart };
   const boot=()=>{ if('requestIdleCallback' in window) requestIdleCallback(initApp,{timeout:1000}); else setTimeout(initApp,50); };
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();

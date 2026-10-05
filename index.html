@@ -90,25 +90,26 @@
 
 <section id="calculator" class="calc">
   <div class="container">
-    <div class="sec-head"><span class="eyebrow">Free Estimation Tool</span><h2>Nigerian Home Solar Load Calculator</h2><p>Select appliances to compute inverter & battery size.</p></div>
+    <div class="sec-head"><span class="eyebrow">Free Estimation Tool</span><h2>Nigerian Home Solar Load Calculator</h2><p>Tell us what you power and for how long. We size your system and price the top-end products that fit.</p></div>
     <div class="calc-grid">
-      <div class="calc-panel"><h3>Select Appliances <small>Adjust qty</small></h3>
-        <div class="calc-items">
-          <div class="calc-item"><div><strong>LED Bulb Lights (10W)</strong><span>Lighting</span></div><input type="number" min="0" value="10" id="load_lights"></div>
-          <div class="calc-item"><div><strong>Standing Fans (75W)</strong><span>Ventilation</span></div><input type="number" min="0" value="4" id="load_fans"></div>
-          <div class="calc-item"><div><strong>Smart TV (120W)</strong><span>Entertainment</span></div><input type="number" min="0" value="2" id="load_tvs"></div>
-          <div class="calc-item"><div><strong>Fridge (250W)</strong><span>Kitchen</span></div><input type="number" min="0" value="1" id="load_fridges"></div>
-          <div class="calc-item"><div><strong>AC 1.5HP (1200W)</strong><span>Cooling</span></div><input type="number" min="0" value="1" id="load_acs"></div>
-          <div class="calc-item"><div><strong>Pump (750W)</strong><span>Intermittent</span></div><input type="number" min="0" value="0" id="load_pumps"></div>
+      <div class="calc-panel"><h3>Select Appliances <small>Quantity &amp; hours per day</small></h3>
+        <div class="calc-items"></div>
+        <div class="calc-opts"><label for="calcBackup">Battery backup target</label>
+          <select id="calcBackup"><option value="0.4">Essentials only (about 40% of daily use)</option><option value="0.6" selected>Night &amp; outages (about 60% of daily use)</option><option value="1">Full day, no grid (100% of daily use)</option></select>
         </div>
       </div>
       <div class="calc-panel calc-result"><h3>Recommended Specs</h3>
-        <div class="calc-row"><span>Total Peak:</span><b id="calcTotalWatts">2,050 W</b></div>
-        <div class="calc-row"><span>Inverter:</span><b id="calcInverterRating" class="gold">3.5 kVA Hybrid</b></div>
-        <div class="calc-row"><span>Battery:</span><b id="calcBatteryCapacity" class="green">10kWh Lithium (48V)</b></div>
-        <div class="calc-row"><span>Panels:</span><b id="calcPanelsCount">6x 550W Mono</b></div>
-        <a href="#shop" class="calc-cta">Find Matching Products</a>
+        <div class="calc-row"><span>Running Load:</span><b id="calcTotalWatts">&mdash;</b></div>
+        <div class="calc-row"><span>Daily Energy:</span><b id="calcDailyKwh">&mdash;</b></div>
+        <div class="calc-row"><span>Inverter:</span><b id="calcInverterRating" class="gold">&mdash;</b></div>
+        <div class="calc-row"><span>Battery:</span><b id="calcBatteryCapacity" class="green">&mdash;</b></div>
+        <div class="calc-row"><span>Solar Array:</span><b id="calcPanelsCount">&mdash;</b></div>
+        <p class="calc-assume">Sized with a 25% safety margin, a start-up allowance for motors (fridge, AC, pump), 5 peak sun hours a day and typical system losses.</p>
       </div>
+    </div>
+    <div class="calc-picks">
+      <div class="calc-picks-head"><div><h3>Top-End Picks For Your Load</h3><p>The premium-priced option in our catalogue that fits each requirement. Live prices in &#8358;.</p></div></div>
+      <div id="calcPicks" aria-live="polite"></div>
     </div>
   </div>
 </section>
