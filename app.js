@@ -245,7 +245,7 @@
   const invV   = p => num(p.title,/(\d+)\s*v\b/i) || ((kvaOf(p)||0)>=3 ? 48 : (kvaOf(p)||0)>=1.8 ? 24 : 12);
   const premium = (list, unit) => list.slice().sort((a,b)=> (effPrice(b)/unit(b))-(effPrice(a)/unit(a)) || unit(a)-unit(b))[0] || null;
   const inStock = p => p.stock!==0 && effPrice(p)>0;
-  let calcState = null, calcKey = '';
+  let calcState = null, calcKey = '', calcTier = 'top';
 
   function renderCalcItems(){
     const box=document.querySelector('.calc-items'); if(!box) return;
@@ -263,25 +263,37 @@
     const dailyKwh=daily/1000;
     return { running, daily, dailyKwh, kva, share, batteryKwh: dailyKwh*share/(0.9*0.92), panelW: daily/(5*0.75) };
   }
-  function pickInverter(kva,needV){
+  function pickInverter(kva,needV,tier){
     const fit=products.filter(p=>p.category==='Inverters' && inStock(p) && !/\+/.test(p.title) && /Hybrid|All-in-One/.test(p.type) && kvaOf(p) && kvaOf(p)>=kva-1e-6 && invV(p)>=needV);
     if(!fit.length) return null;
-    const minK=Math.min(...fit.map(kvaOf));
-    return premium(fit.filter(p=>kvaOf(p)<=minK*1.5), kvaOf);
+    const minK=Math.min(...fit.map(kvaOf)), band=fit.filter(p=>kvaOf(p)<=minK*1.5);
+    return tier==='budget' ? band.slice().sort((a,b)=>effPrice(a)-effPrice(b)||kvaOf(a)-kvaOf(b))[0] : premium(band,kvaOf);
   }
-  function pickBattery(kwh,V){
+  function pickBattery(kwh,V,tier){
     const base=products.filter(p=>p.category==='Batteries' && inStock(p) && !/\+/.test(p.title) && kwhOf(p) && num(p.type,/Lithium\s+(\d+)V/)===V);
     if(!base.length) return null;
     const opts=base.map(p=>{ const u=kwhOf(p), n=Math.max(1,Math.ceil(kwh/u-1e-6)); return {p,u,n,total:n*u}; });
     let ok=opts.filter(o=>o.n<=4 && o.total<=Math.max(kwh*1.5,kwh+3));
     if(!ok.length) ok=opts.filter(o=>o.n<=8);
     if(!ok.length) ok=opts;
-    ok.sort((a,b)=>(effPrice(b.p)/b.u)-(effPrice(a.p)/a.u) || a.n-b.n);
+    ok.sort(tier==='budget' ? (a,b)=>effPrice(a.p)*a.n-effPrice(b.p)*b.n || a.n-b.n : (a,b)=>(effPrice(b.p)/b.u)-(effPrice(a.p)/a.u) || a.n-b.n);
     return ok[0];
   }
-  function pickPanel(w){
-    const p=premium(products.filter(x=>x.category==='Panels' && inStock(x) && (wattOf(x)||0)>=450), wattOf);
-    return p ? {p, n:Math.max(1,Math.ceil(w/wattOf(p)))} : null;
+  function pickPanel(w,tier){
+    const list=products.filter(x=>x.category==='Panels' && inStock(x) && (wattOf(x)||0)>=(tier==='budget'?350:450));
+    if(!list.length) return null;
+    if(tier==='budget'){
+      const best=list.map(x=>({p:x,n:Math.max(1,Math.ceil(w/wattOf(x)))})).sort((a,b)=>effPrice(a.p)*a.n-effPrice(b.p)*b.n || a.n-b.n)[0];
+      return best;
+    }
+    const p=premium(list,wattOf); return {p, n:Math.max(1,Math.ceil(w/wattOf(p)))};
+  }
+  function buildPicks(s,tier){
+    const needV=(s.kva>=3||s.batteryKwh>=5)?48:(s.kva>=1.8||s.batteryKwh>=2.5)?24:12;
+    const inv=pickInverter(s.kva,needV,tier), V=inv?invV(inv):needV;
+    const bat=pickBattery(s.batteryKwh,V,tier), pan=pickPanel(s.panelW,tier);
+    const rows=[]; if(inv) rows.push({p:inv,qty:1}); if(bat) rows.push({p:bat.p,qty:bat.n}); if(pan) rows.push({p:pan.p,qty:pan.n});
+    return { inv, bat, pan, rows, total: rows.reduce((t,r)=>t+effPrice(r.p)*r.qty,0) };
   }
   function pickCard(tag, p, qty, sub){
     if(!p) return `<div class="calc-pick unavailable"><div class="cp-body"><span class="cp-tag">${tag}</span><h4>No matching product listed</h4><p>Message us for a custom quote for this size.</p></div></div>`;
@@ -290,20 +302,21 @@
   }
   function renderCalcPicks(s){
     const box=document.querySelector('#calcPicks'); if(!box) return;
-    if(s.running<=0 || s.daily<=0){ calcState=null; calcKey=''; box.innerHTML='<p class="calc-empty">Add at least one appliance (quantity and hours above 0) to see top-end product prices.</p>'; return; }
-    const needV=(s.kva>=3||s.batteryKwh>=5)?48:(s.kva>=1.8||s.batteryKwh>=2.5)?24:12;
-    const inv=pickInverter(s.kva,needV), V=inv?invV(inv):needV;
-    const bat=pickBattery(s.batteryKwh,V), pan=pickPanel(s.panelW);
-    const key=[inv?.id,bat?.p.id,bat?.n,pan?.p.id,pan?.n].join('|');
-    const rows=[]; if(inv) rows.push({p:inv,qty:1}); if(bat) rows.push({p:bat.p,qty:bat.n}); if(pan) rows.push({p:pan.p,qty:pan.n});
-    const total=rows.reduce((t,r)=>t+effPrice(r.p)*r.qty,0);
+    if(s.running<=0 || s.daily<=0){ calcState=null; calcKey=''; box.innerHTML='<p class="calc-empty">Add at least one appliance (quantity and hours above 0) to see product prices.</p>'; return; }
+    const top=calcTier==='top', cur=buildPicks(s,calcTier), other=buildPicks(s,top?'budget':'top'), {inv,bat,pan,rows,total}=cur;
+    const ttl=document.getElementById('calcPicksTitle'), sub=document.getElementById('calcPicksSub');
+    if(ttl) ttl.textContent=(top?'Top-End':'Budget')+' Picks For Your Load';
+    if(sub) sub.innerHTML=top?'The premium-priced option in our catalogue that fits each requirement. Live prices in &#8358;.':'The lowest-priced option in our catalogue that fits each requirement. Live prices in &#8358;.';
     calcState={items:rows,total};
-    if(key===calcKey){ const t=box.querySelector('.calc-total strong'); if(t) t.textContent=formatNaira(total); return; }
+    const complete=rows.length===3, showOther=complete && other.rows.length===3;
+    const key=[calcTier,inv?.id,bat?.p.id,bat?.n,pan?.p.id,pan?.n,other.total].join('|');
+    if(key===calcKey) return;
     calcKey=key;
-    const complete=rows.length===3;
-    const msg=`Hello SunergyX, I used your calculator (about ${(s.running/1000).toFixed(1)} kW load, ${s.dailyKwh.toFixed(1)} kWh/day). Top-end picks: `+rows.map(r=>`${r.qty}x ${r.p.title}`).join('; ')+`. Estimated ${formatNaira(total)}. Please confirm availability and delivery.`;
+    const diff=Math.abs(cur.total-other.total);
+    const hint=showOther ? `<small class="calc-other">${top?'Budget option':'Top-end option'}: ${formatNaira(other.total)} (${top?'saves':'adds'} about ${formatNaira(diff)})</small>` : '';
+    const msg=`Hello SunergyX, I used your calculator (about ${(s.running/1000).toFixed(1)} kW load, ${s.dailyKwh.toFixed(1)} kWh/day). ${top?'Top-end':'Budget'} picks: `+rows.map(r=>`${r.qty}x ${r.p.title}`).join('; ')+`. Estimated ${formatNaira(total)}. Please confirm availability and delivery.`;
     box.innerHTML=`<div class="calc-pick-grid">${pickCard('Inverter',inv,1,inv?`${inv.brand} &middot; ${kvaOf(inv)} kVA &middot; ${invV(inv)}V`:'')}${pickCard('Battery',bat&&bat.p,bat&&bat.n,bat?`${bat.p.brand} &middot; ${bat.n>1?bat.n+' units = ':''}${+(bat.total).toFixed(1)} kWh total`:'')}${pickCard('Solar Panels',pan&&pan.p,pan&&pan.n,pan?`${pan.p.brand} &middot; ${pan.n*wattOf(pan.p)} W total`:'')}</div>
-      <div class="calc-total"><div><small>${complete?'Estimated equipment total':'Estimated total (items listed above)'}</small><strong>${formatNaira(total)}</strong></div>
+      <div class="calc-total"><div><small>${complete?'Estimated equipment total':'Estimated total (items listed above)'}</small><strong>${formatNaira(total)}</strong>${hint}</div>
       <div class="calc-btns"><button type="button" class="calc-cta" onclick="SunergyX.addCalcSystem()">Add Full System to Cart</button><a class="calc-cta alt" target="_blank" rel="noopener" href="https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}">Get a Quote on WhatsApp</a></div></div>
       <p class="calc-note">Prices exclude delivery, mounting structure, cabling, protection and installation. Prices and stock can change.</p>`;
   }
@@ -334,6 +347,11 @@
     renderCalcItems();
     const run=debounce(calculateSolarLoad,120);
     sec.addEventListener('input',run); sec.addEventListener('change',calculateSolarLoad);
+    sec.querySelectorAll('.calc-tier button').forEach(btn=>btn.addEventListener('click',()=>{
+      calcTier=btn.dataset.tier; calcKey='';
+      sec.querySelectorAll('.calc-tier button').forEach(x=>{ const on=x===btn; x.classList.toggle('on',on); x.setAttribute('aria-pressed',on?'true':'false'); });
+      calculateSolarLoad();
+    }));
     calculateSolarLoad();
   }
 

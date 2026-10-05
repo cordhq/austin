@@ -60,7 +60,11 @@
 </nav>
 
 <section class="hero">
-  <img class="hero-bg" src="hero-solar.jpg" alt="Solar Farm" fetchpriority="high" decoding="async">
+  <video class="hero-bg" src="https://res.cloudinary.com/haqeg3gc/video/upload/v1791150129/8853485-hd_1920_1080_24fps.mp4" poster="hero-solar.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+  <script>
+  (function(){var v=document.querySelector('.hero video');if(!v)return;var c=navigator.connection||{};
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches||c.saveData){v.removeAttribute('autoplay');v.pause();v.removeAttribute('src');v.load();}})();
+  </script>
   <div class="hero-overlay"></div><div class="hero-overlay-dark"></div>
   <div class="hero-content"><div class="hero-text"><h2>Green Energy</h2><h1>Radiance</h1><a class="hero-btn" href="#shop">Explore Now</a></div></div>
 </section>
@@ -90,7 +94,7 @@
 
 <section id="calculator" class="calc">
   <div class="container">
-    <div class="sec-head"><span class="eyebrow">Free Estimation Tool</span><h2>Nigerian Home Solar Load Calculator</h2><p>Tell us what you power and for how long. We size your system and price the top-end products that fit.</p></div>
+    <div class="sec-head"><span class="eyebrow">Free Estimation Tool</span><h2>Nigerian Home Solar Load Calculator</h2><p>Tell us what you power and for how long. We size your system and price top-end or budget products that fit.</p></div>
     <div class="calc-grid">
       <div class="calc-panel"><h3>Select Appliances <small>Quantity &amp; hours per day</small></h3>
         <div class="calc-items"></div>
@@ -108,7 +112,8 @@
       </div>
     </div>
     <div class="calc-picks">
-      <div class="calc-picks-head"><div><h3>Top-End Picks For Your Load</h3><p>The premium-priced option in our catalogue that fits each requirement. Live prices in &#8358;.</p></div></div>
+      <div class="calc-picks-head"><div><h3 id="calcPicksTitle">Top-End Picks For Your Load</h3><p id="calcPicksSub">The premium-priced option in our catalogue that fits each requirement. Live prices in &#8358;.</p></div>
+        <div class="calc-tier" role="group" aria-label="Choose product tier"><button type="button" class="on" data-tier="top" aria-pressed="true">Top-End</button><button type="button" data-tier="budget" aria-pressed="false">Budget</button></div></div>
       <div id="calcPicks" aria-live="polite"></div>
     </div>
   </div>

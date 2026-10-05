@@ -41,3 +41,7 @@
 - Both open from the footer (and the checkout line) as pop-ups in index.html: id="refundModal" and id="shippingModal". Direct links: /#refund-policy and /#shipping-policy.
 - The delivery fee table in the Shipping Policy is read from shipping.js, so it always matches checkout.
 - Search index.html for "CONFIRM" to find the business rules I chose (48-hour return window, 1-3 working day processing, who pays return delivery). Change them to your real rules.
+
+## Hero video
+- The hero in index.html is a looping muted video (Cloudinary URL) with hero-solar.jpg as the poster/fallback.
+- It does not autoplay for visitors with "reduce motion" or Data Saver on; they see the poster image instead.

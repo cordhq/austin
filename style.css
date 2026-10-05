@@ -337,3 +337,12 @@ html{scroll-behavior:smooth}
   .footer-links{display:grid; grid-template-columns:1fr 1fr; gap:8px 16px}
   .footer-links h4{grid-column:1/-1; margin-bottom:0}
 }
+
+/* ---- calculator tier toggle ---- */
+.calc-picks-head{display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap}
+.calc-tier{display:inline-flex; border:1px solid #10A75F; border-radius:22px; overflow:hidden; flex-shrink:0}
+.calc-tier button{border:0; background:#fff; color:#10A75F; padding:9px 20px; font:inherit; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; transition:background .2s,color .2s}
+.calc-tier button.on{background:#10A75F; color:#fff}
+.calc-tier button:not(.on):hover{background:#F0FAF4}
+.calc-other{display:block; margin-top:4px; font-size:11px; color:#6B7280}
+@media(max-width:700px){.calc-tier{width:100%}.calc-tier button{flex:1}}
